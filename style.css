@@ -1,0 +1,38 @@
+body{
+    background: #F7F7F7;
+    font-family: "Century Schoolbook";
+    margin-left: 400px;
+    margin-right: 400px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+h1{
+    font-size: 45px;
+    text-align: center;
+    text-decoration: underline;
+}
+
+h4{
+    text-align: center;
+}
+
+th{
+    font-size: 30px;
+}
+
+tr{
+    font-size: 16px;
+}
+
+span{
+    font-weight: bold;
+}
+
+.resizedTextbox {
+    width: 500px;
+
+}
+.progress{
+    text-align: center;
+    margin-top: 20px;
+}
