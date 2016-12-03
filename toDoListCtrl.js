@@ -1,17 +1,31 @@
 var toDoList = angular.module('toDoList',[]);
 
-toDoList.controller("toDoListCtrl", ['$scope', function($scope){
+toDoList.controller("toDoListCtrl", ['$scope','$window', function($scope, $window){
     $scope.tasks = [{description:"Finish SI1's Project", finished: false}, {description:"Conquer the world", finished: false}, {description:"Grow a full beard",finished:false}];
     $scope.progress = 0.00;
 
     $scope.addNewTask = function(){
         var description = $scope.input;
-        if (description){
+        if (description && !containsTask(description)){
             $scope.tasks.push({description: description, finished: false});
+        }
+        else{
+            $window.alert("The task description must not already exist or be empty. Please try again!")
         }
     };
 
+    function containsTask(description){
+        var contains = false;
+        $scope.tasks.forEach(function(task) {
+            if (task.description==description){
+                contains = true;
+            }
+        });
+        return contains;
+    };
+
     $scope.removeTask = function (taskToBeRemoved) {
+        console.log(containsTask(taskToBeRemoved));
         var counter = 0
         $scope.tasks.forEach(function(task) {
             if (task.description==taskToBeRemoved.description){
