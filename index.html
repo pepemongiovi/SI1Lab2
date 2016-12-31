@@ -1,59 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="toDoList">
 <head>
     <meta charset="UTF-8">
     <title>To do list</title>
-    <script type="text/javascript" src="angular.min.js"></script>
-    <script type="text/javascript" src="toDoListCtrl.js"></script>
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="js/route/config.js"></script>
+    <script type="text/javascript" src="js/controllers/toDoListCtrl.js"></script>
 </head>
-<body ng-app="toDoList">
+<body>
     <nav>
         <ul>
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a ui-sref="contact">Contact</a></li>
         </ul>
     </nav>
-    <div ng-controller="toDoListCtrl">
-        <h1><b>To do list</b></h1>
-        <br/>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Tasks</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="task in tasks">
-                    <td>{{task.description}}</td>
-                    <td><input type="checkbox" ng-model="task.finished">
-                        <span ng-if="task.finished" style="color:#41EF00"> Complete</span>
-                        <span ng-if="!task.finished" style="color:red"> Not complete</span>
-                    </td>
-                    <td style="text-decoration: underline" >
-                        <button ng-click="removeTask(task)"">Remove</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <br/>
-        <div>
-            <h3>New task:</h3>
-            <input class="resizedTextbox" ng-model="input" placeholder=" Create new task">
-            <button ng-click="addNewTask()">Create</button>
-            <button ng-click="clearTasks()">Clear</button>
-        </div>
-        <br/>
-
-        <div class="progress">
-            <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{progress}}%" >
-                <span ng-if="progress!=100">{{progress}}% COMPLETE</span>
-                <span ng-if="progress==100">ALL DONE!!!</span>
-            </div>
-        </div>
-        <h4>Progress</h4>
-    </div>
+    <div ui-view></div>
 </body>
 </html>

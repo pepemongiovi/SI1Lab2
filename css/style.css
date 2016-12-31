@@ -1,15 +1,19 @@
 body{
     background: #F7F7F7;
     font-family: "Century Schoolbook";
-    margin-left: 400px;
-    margin-right: 400px;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top:-10px;
+    margin-bottom: 10px;
 }
 h1{
     font-size: 45px;
     text-align: center;
     text-decoration: underline;
+}
+
+h3{
+    font-weight: bold;
 }
 
 h4{
