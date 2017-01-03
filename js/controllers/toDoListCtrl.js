@@ -35,12 +35,10 @@ var toDoList = angular.module('toDoList')
 
         $scope.selectCategory = function(category){
             $scope.categoryStatus[category] = true;
-            console.log($scope.categoryStatus);
         };
 
         $scope.deselectCategory = function(category){
             $scope.categoryStatus[category] = false;
-            console.log($scope.categoryStatus);
         };
 
         $scope.addNewTask = function(){
@@ -96,7 +94,6 @@ var toDoList = angular.module('toDoList')
                 }
                 counter +=1
             });
-            console.log(listService.getLists());
         };
 
         $scope.clearTasks = function(){
@@ -118,12 +115,16 @@ var toDoList = angular.module('toDoList')
             $scope.lists = [];
         };
 
-        $scope.$watch('currentList.tasks',function(){
-            var totalTasks = $scope.currentList.tasks.length;
+        $scope.$watch('[currentList.tasks, categoryStatus]',function(){
+            var totalTasks = 0;
             var totalTasksCompleted = 0;
+            
             $scope.currentList.tasks.forEach(function (task) {
-                if(task.finished){
-                    totalTasksCompleted+=1
+                if($scope.categoryStatus[task.category]){
+                    if(task.finished){
+                        totalTasksCompleted+=1;
+                    }
+                    totalTasks+=1;
                 }
             });
             if (totalTasks==0){
