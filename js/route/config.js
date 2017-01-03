@@ -12,4 +12,9 @@ angular.module("toDoList",["ui.router"])
                 url: "/contact",
                 templateUrl: "Templates/contact.html"
             })
+            .state("createList",{
+            	url: "/createList",
+            	templateUrl: "Templates/createList.html",
+            	controller: "toDoListCtrl"
+            })
     }]);

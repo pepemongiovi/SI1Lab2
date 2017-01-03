@@ -10,11 +10,12 @@
     <script type="text/javascript" src="js/route/config.js"></script>
     <script type="text/javascript" src="js/controllers/toDoListCtrl.js"></script>
 </head>
-<body>
+<body ng-controller="toDoListCtrl">
     <nav>
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a ui-sref="contact">Contact</a></li>
+            <li><a href="#" ng-click="setActive(menuItems.home)" ng-class="{active : activeMenu == menuItems.home}">{{menuItems.home}}</a></li>
+            <li><a ui-sref="createList" ng-click="setActive(menuItems.createList)" ng-class="{active : activeMenu == menuItems.createList}">{{menuItems.createList}}</a></li>
+            <li><a ui-sref="contact" ng-click="setActive(menuItems.contact)" ng-class="{active : activeMenu == menuItems.contact}">{{menuItems.contact}}</a></li>
         </ul>
     </nav>
     <div ui-view></div>

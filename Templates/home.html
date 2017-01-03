@@ -1,41 +1,91 @@
 <div ng-controller="toDoListCtrl">
     <h1><b>To do list</b></h1>
     <br/>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Tasks</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="task in tasks">
-                <td>{{task.description}}</td>
-                <td><input type="checkbox" ng-model="task.finished"></input>
-                    <span ng-if="task.finished" style="color:#41EF00"> Complete</span>
-                    <span ng-if="!task.finished" style="color:red"> Not complete</span>
-                </td>
-                <td style="text-decoration: underline">
-                    <button ng-click="removeTask(task)">Remove</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <br/>
     <div>
-        <h3>New task:</h3>
-        <input class="resizedTextbox" ng-model="input" placeholder=" Create new task"></input>
-        <button ng-click="addNewTask()">Create</button>
-        <button ng-click="clearTasks()">Clear</button>
+    <span style="font-size:25px">Current list: </span>
+    <select  class="styled-select blue semi-square" ng-model="currentList" 
+            ng-options="list as list.description for list in lists" style="width:250px"></select>
+    <button ng-click="removeList(currentList)">Delete</button>
+    <button ng-click="clearLists()">Clear</button>
     </div>
     <br/>
-
-    <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{progress}}%">
-            <span ng-if="progress!=100">{{progress}}% COMPLETE</span>
-            <span ng-if="progress==100">ALL DONE!!!</span>
+    <div name="Current list" ng-show="lists.length>0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tasks</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="task in currentList.tasks" ng-class="{lowPriority : task.priority == 
+                priorities.low, mediumPriority : task.priority == 
+                priorities.medium,highPriority : task.priority == 
+                priorities.high}" ng-show="categoryStatus[task.category]">
+                    <td>{{task.description}}</td>
+                    <td>
+                        <select class="styled-select blue semi-square" ng-model="task.category" ng-options="category for category in categories"></select> 
+                    </td>
+                    <td>
+                        <select class="styled-select blue semi-square" ng-model="task.priority" ng-options="priority for priority in priorities"></select>
+                    </td>
+                    <td><input type="checkbox" ng-model="task.finished"></input>
+                        <span ng-if="task.finished" style="color:#41EF00"> Complete</span>
+                        <span ng-if="!task.finished" style="color:red"> Not complete</span>
+                    </td>
+                    <td style="text-decoration: underline">
+                        <button ng-click="removeTask(task)">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+          
+         <form>
+            <h3 style="text-decoration: underline">Categories: </h3>
+            <input type="checkbox" ng-model="categoryStatus[categories.university]" ng-change="categoryStatus[categories.university] ? selectCategory(categories.university) : deselectCategory(categories.university)" checked="true">{{categories.university}}</input>
+            <input type="checkbox" ng-model="categoryStatus[categories.work]" ng-change="categoryStatus[categories.work] ? selectCategory(categories.work) : deselectCategory(categories.work)" checked="true">{{categories.work}}</input>
+            <input type="checkbox" ng-model="categoryStatus[categories.home]" ng-change="categoryStatus[categories.home] ? selectCategory(categories.home) : deselectCategory(categories.home)" checked="true">{{categories.home}}</input>
+            <input type="checkbox" ng-model="categoryStatus[categories.other]" ng-change="categoryStatus[categories.other] ? selectCategory(categories.other) : deselectCategory(categories.other)" checked="true">{{categories.other}}</input>
+        </form>
+            
+        <form>
+            <h3 style="text-decoration: underline">New task:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="inputTableText">Description</th>
+                        <th class="inputTableText">Category</th>
+                        <th class="inputTableText">Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>
+                        <input class="resizedTextbox" ng-model="input.task.description" placeholder=" Task's description"></input>
+                    </td>
+                    <td>
+                        <select class="styled-select blue semi-square" ng-model="input.task.category" ng-options="category for category in categories"></select>
+                    </td>
+                    <td>
+                        <select class="styled-select blue semi-square" ng-model="input.task.priority" ng-options="priority for priority in priorities"></select>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button ng-click="addNewTask()">Create</button>
+            <button ng-click="clearTasks()">Clear</button>
+        </form>
+        <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{progress}}%">
+                <span ng-if="progress!=100">{{progress}}% COMPLETE</span>
+                <span ng-if="progress==100">ALL DONE!!!</span>
+            </div>
         </div>
+        <h4>Progress (%)</h4>
     </div>
-    <h4>Progress</h4>
+
+    <h2 ng-show="lists.length==0">There are no lists to be shown.</h2>
 </div>
 
