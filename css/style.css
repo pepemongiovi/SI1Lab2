@@ -14,6 +14,7 @@ h1{
 
 h2{
     color: red;
+    margin-bottom: 50px;
 }
 
 h3{
@@ -39,6 +40,10 @@ button{
 
 th{
     font-size: 30px;
+}
+
+td{
+    margin-right: 30px;
 }
 
 tr{

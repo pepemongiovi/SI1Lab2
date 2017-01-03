@@ -29,9 +29,13 @@ var toDoList = angular.module('toDoList')
                                 University: true,
                                 Other: true}; 
 
+        $scope.priorityStatus = {High: true,
+                                Medium: true,
+                                Low: true}; 
+
         $scope.activeMenu = $scope.menuItems.home;
-        $scope.progress = 0.00;
         $scope.currentList = $scope.lists[0];
+        $scope.progress = 0.00;
 
         $scope.selectCategory = function(category){
             $scope.categoryStatus[category] = true;
@@ -39,6 +43,14 @@ var toDoList = angular.module('toDoList')
 
         $scope.deselectCategory = function(category){
             $scope.categoryStatus[category] = false;
+        };
+
+        $scope.selectPriority = function(priority){
+            $scope.priorityStatus[priority] = true;
+        };
+
+        $scope.deselectPriority = function(priority){
+            $scope.priorityStatus[priority] = false;
         };
 
         $scope.addNewTask = function(){
@@ -115,12 +127,12 @@ var toDoList = angular.module('toDoList')
             $scope.lists = [];
         };
 
-        $scope.$watch('[currentList.tasks, categoryStatus]',function(){
+        $scope.$watch('[currentList.tasks, categoryStatus, priorityStatus]',function(){
             var totalTasks = 0;
             var totalTasksCompleted = 0;
             
             $scope.currentList.tasks.forEach(function (task) {
-                if($scope.categoryStatus[task.category]){
+                if($scope.categoryStatus[task.category] && $scope.priorityStatus[task.priority]){
                     if(task.finished){
                         totalTasksCompleted+=1;
                     }
