@@ -19,7 +19,8 @@ h2{
 
 h3{
     font-weight: bold;
-    text-decoration: underline
+    text-decoration: underline;
+    margin-top:7px;
 }
 
 h4{
@@ -31,11 +32,12 @@ table{
 }
 
 form{
-    background-color:#DCDCDC;   
+    margin-bottom: 20px;   
 }
 
 button{
-    height:30px;
+    height:32px;
+    font-size:15px;
 }
 
 th{
@@ -44,39 +46,11 @@ th{
 
 td{
     margin-right: 30px;
+    font-size:16px;
 }
 
 tr{
     font-size: 16px;
-}
-
-span{
-    font-weight: bold;
-}
-
-.inputTableText {
-    font-size:20px;
-}
-
-.resizedTextbox {
-    width: 400px;
-
-}
-.progress{
-    text-align: center;
-    margin-top: 20px;
-}
-
-.highPriority{
-    background-color:rgba(255,0,0,0.4);
-}
-
-.mediumPriority{
-    background-color:rgba(255,140,0,0.4);
-}
-
-.lowPriority{
-    background-color:rgba(255,215,0,0.4);
 }
 
 nav{
@@ -109,9 +83,57 @@ nav ul li a.active{
     color: #800000;
 }
 
+.complete{
+    font-weight: bold;
+    color:#41EF00;
+}
+
+.notComplete{
+    font-weight: bold;
+    color:red;
+}
+
+.editrow {
+  margin: 0 3px;
+  padding: 2px;
+}
+
+.inputTableText {
+    font-size:20px;
+}
+
+.newTaskBox{
+    border: 3px solid #000000; 
+    background-color:#DCDCDC;
+}
+
+.descriptionInputBox{
+    width: 400px;
+    height:30px;
+}
+
+.progress{
+    text-align: center;
+    height: 25px;
+    margin-top: 20px;
+}
+
+.highPriority{
+    background-color:rgba(255,0,0,0.4);
+}
+
+.mediumPriority{
+    background-color:rgba(255,140,0,0.4);
+}
+
+.lowPriority{
+    background-color:rgba(255,215,0,0.4);
+}
+
 .styled-select {
-   height: 29px;
+   height: 30px;
    overflow: hidden;
+   font-size: 17px;
    width: 130px;
 }
 .semi-square {

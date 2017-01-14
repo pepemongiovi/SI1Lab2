@@ -3,8 +3,8 @@
     <br/>
     <div>
         <span style="font-size:25px">Current list: </span>
-        <select  class="styled-select blue semi-square" ng-model="currentList" 
-                ng-options="list as list.description for list in lists" style="width:250px"></select>
+        <select  class="styled-select blue semi-square"  style="width:250px" ng-model="currentList" 
+                ng-options="list as list.description for list in lists"></select>
         <button ng-click="removeList(currentList)">Delete</button>
         <button ng-click="clearLists()">Clear</button>
     </div>
@@ -17,68 +17,132 @@
                     <th>Category</th>
                     <th>Priority</th>
                     <th>Status</th>
+                    <th>
+                        <button ng-click="sortByDescription()" title="Order by name">
+                            <i class="fa fa-sort-alpha-asc"></i>
+                        </button>
+                        <button ng-click="sortByPriority()" title="Order by priority">
+                            <i class="fa fa-sort-amount-desc"></i>
+                        </button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="task in currentList.tasks" ng-class="{lowPriority : task.priority == priorities.low, 
                 mediumPriority : task.priority == priorities.medium,highPriority : task.priority == priorities.high}" 
                 ng-show="categoryStatus[task.category] && priorityStatus[task.priority]">
-                    <td>{{task.description}}</td>
+                    <td>
+
+                        <span class="editrow" child-scope>
+                            <span ng-hide="editingDescription">
+                                <span ng-click="editingDescription = true" placeholder="Edit">
+                                    <i class="fa fa-pencil" ></i>
+                                </span>
+                                <b>{{task.description}}</b>
+                            </span>
+
+                            <span ng-show="editingDescription">
+                                <input type="text" ng-model="task.description"> 
+                                <span ng-click="editingDescription = false"><i class="fa fa-check"></i></span>
+                            </span> 
+                        </span>
+
+                        <span class="editrow" child-scope>
+                            <span ng-click="showDetailedDescription = true" ng-hide="showDetailedDescription">
+                                <i class="fa fa-commenting-o"></i>
+                            </span>
+                            <span ng-click="showDetailedDescription = false" ng-show="showDetailedDescription">
+                                <i class="fa fa-commenting"></i>
+                                <div style="margin-left:20px">
+                                    <span>{{task.detailedDescription}}</span>
+                                    <span ng-hide="task.subtasks.length==0"></br><u>Subtasks:</u></span>
+                                    <span ng-repeat="subtask in task.subtasks"></br>- {{subtask}}</span>
+                                </div>
+                            </span>
+                        </span>
+                        
+                        <span class="editrow" ng-controller="toDoListCtrl" child-scope>
+                            <span ng-click="addingSubtask = true" ng-hide="addingSubtask">
+                                <i class="fa fa-plus" title="New subtask"></i>
+                            </span>
+                            <span ng-show="addingSubtask">
+                                <input type="text" ng-model="input.task.subtask" placeholder=" New subtask"> 
+                                <span ng-click="addNewSubtask(task)"><i class="fa fa-check"></i></span>
+                            </span> 
+                        </span>      
+                        
+                    </td>
                     <td>
                         <select class="styled-select blue semi-square" ng-model="task.category" 
-                        ng-options="category for category in categories"></select> 
+                        ng-options="category for category in categories"></select>
                     </td>
                     <td>
                         <select class="styled-select blue semi-square" ng-model="task.priority" 
                         ng-options="priority for priority in priorities"></select>
                     </td>
                     <td><input type="checkbox" ng-model="task.finished"></input>
-                        <span ng-if="task.finished" style="color:#41EF00"> Complete</span>
-                        <span ng-if="!task.finished" style="color:red"> Not complete</span>
+                        <span ng-if="task.finished" class="complete"> Complete</span>
+                        <span ng-if="!task.finished" class="notComplete"> Not complete</span>
                     </td>
                     <td style="text-decoration: underline">
-                        <button ng-click="removeTask(task)">Remove</button>
+                        <span ng-click="removeTask(task)">
+                            <i title="Delete" class="fa fa-remove" style="margin-left:32px"></i>
+                        </span>
                     </td>
                 </tr>
             </tbody>
-        </table>  
-        <form>
-            <h3 style="text-decoration: underline">Filter by categories: </h3>
-            <input type="checkbox" ng-model="categoryStatus[categories.university]" ng-change="categoryStatus[categories.university] ? selectCategory(categories.university) : deselectCategory(categories.university)" checked="true">{{categories.university}}</input>
-            <input type="checkbox" ng-model="categoryStatus[categories.work]" ng-change="categoryStatus[categories.work] ? selectCategory(categories.work) : deselectCategory(categories.work)" checked="true">{{categories.work}}</input>
-            <input type="checkbox" ng-model="categoryStatus[categories.home]" ng-change="categoryStatus[categories.home] ? selectCategory(categories.home) : deselectCategory(categories.home)" checked="true">{{categories.home}}</input>
-            <input type="checkbox" ng-model="categoryStatus[categories.other]" ng-change="categoryStatus[categories.other] ? selectCategory(categories.other) : deselectCategory(categories.other)" checked="true">{{categories.other}}</input>
+        </table>
 
-            <h3 style="text-decoration: underline">Filter by priorities: </h3>
-            <input type="checkbox" ng-model="priorityStatus[priorities.low]" ng-change="priorityStatus[priorities.low] ? selectPriority(priorities.low) : deselectPriority(priorities.low)" checked="true">{{priorities.low}}</input>
-            <input type="checkbox" ng-model="priorityStatus[priorities.medium]" ng-change="priorityStatus[priorities.medium] ? selectPriority(priorities.medium) : deselectPriority(priorities.medium)" checked="true">{{priorities.medium}}</input>
-            <input type="checkbox" ng-model="priorityStatus[priorities.high]" ng-change="priorityStatus[priorities.high] ? selectPriority(priorities.high) : deselectPriority(priorities.high)" checked="true">{{priorities.high}}</input>
+        <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{progress}}%">
+                <span style="font-size:15px" ng-if="progress==100">ALL DONE!!!</span>
+            </div>
+        </div>
+        <h4>Progress: {{progress}} %</h4>  
+
+        <form>
+            <h3>Filter by categories: </h3>
+            <span ng-repeat="category in categories">
+                <input type="checkbox" ng-model="categoryStatus[category]" ng-change="categoryStatus[category] ? selectCategory(category) : deselectCategory(category)" checked="true">{{category}}</input>
+            </span>
+
+            <h3>Filter by priorities: </h3>
+            <span ng-repeat="priority in priorities">
+                <input type="checkbox" ng-model="priorityStatus[priority]" ng-change="priorityStatus[priority] ? selectPriority(priority) : deselectPriority(priority)" checked="true">{{priority}}</input>
+            </span>
         </form>
     </div>
 
     <h2 ng-show="lists.length>0 && currentList.tasks.length==0">There are no tasks to be shown.</h2>
 
     <div ng-show="lists.length>0">  
-        <form>
-            <h3 style="text-decoration: underline">New task:</h3>
+        <form class="newTaskBox">
+            <h3>New task:</h3>
             <table>
                 <thead>
                     <tr>
                         <th class="inputTableText">Description</th>
-                        <th class="inputTableText">Category</th>
+                        <th class="inputTableText">Detailed description</th>
                         <th class="inputTableText">Priority</th>
+                        <th class="inputTableText">Category</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                     <td>
-                        <input class="resizedTextbox" ng-model="input.task.description" placeholder=" Task's description"></input>
+                        <input class="descriptionInputBox" style="width:200px" ng-model="input.task.description" placeholder=" Task's description"></input>
+                    </td>
+                    <td>
+                        <input class="descriptionInputBox"  ng-model="input.task.detailedDescription" placeholder=" Task's detailed description"></input>
+                    </td>
+                    <td>
+                        <select class="styled-select blue semi-square" ng-model="input.task.priority" ng-options="priority for priority in priorities"></select>
                     </td>
                     <td>
                         <select class="styled-select blue semi-square" ng-model="input.task.category" ng-options="category for category in categories"></select>
                     </td>
                     <td>
-                        <select class="styled-select blue semi-square" ng-model="input.task.priority" ng-options="priority for priority in priorities"></select>
+                        <input ng-if="input.task.category==categories.other" ng-model="input.task.otherCategory" placeholder=" Task's category"></input>
                     </td>
                     </tr>
                 </tbody>
@@ -87,17 +151,7 @@
             <button ng-click="addNewTask()">Create</button>
             <button ng-click="clearTasks()">Clear</button>
         </form>
-
-        <div class="progress">
-            <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{progress}}%">
-                <span ng-if="progress!=100">{{progress}}% COMPLETE</span>
-                <span ng-if="progress==100">ALL DONE!!!</span>
-            </div>
-        </div>
-
-        <h4>Progress (%)</h4>  
     </div>
-
     <h2 ng-show="lists.length==0">There are no lists to be shown.</h2>
 </div>
 

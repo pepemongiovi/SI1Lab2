@@ -1,5 +1,9 @@
-var toDoList = angular.module('toDoList')
-    .controller("toDoListCtrl", ['$scope','$window', function($scope, $window,listService){
+var toDoList = angular.module('toDoList');
+
+    toDoList.directive('childScope', function() {
+        return { scope: true, restrict:'AE' }
+    });
+    toDoList.controller("toDoListCtrl", ['$scope','$window', function($scope, $window,listService){
 
         $scope.menuItems = {home:'Home',
                             createList: 'Create new list',
@@ -9,17 +13,17 @@ var toDoList = angular.module('toDoList')
                             medium: "Medium",
                             low: "Low"};
 
-        $scope.categories = {work: "Work",
+        $scope.categories = {other: "Other",
+                            work: "Work",
                             university: "University",
-                            home: "Home",
-                            other: "Other"};
+                            home: "Home"};
 
-        var initialTasks = [{description:"Finish SI1's Project", finished: false, priority: $scope.priorities.high, 
-                                category: $scope.categories.university}, 
-                            {description:"Sleep at least 10 hours", finished: true, priority: $scope.priorities.low, 
-                                category: $scope.categories.other}, 
-                            {description:"Grow a full beard",finished:false, priority: $scope.priorities.medium, 
-                                category: $scope.categories.other}];
+        var initialTasks = [{description:"Finish SI1's Project", detailedDescription: "See how spring works and finish some design work.",
+                             finished: false, priority: $scope.priorities.medium, category: $scope.categories.university, subtasks: []}, 
+                            {description:"Clean the dishes", detailedDescription: "I better do it fast before my mom kills me.",
+                            finished: true, priority: $scope.priorities.high, category: $scope.categories.home, subtasks: []}, 
+                            {description:"Get tanned.", detailedDescription: "Need to be careful not to get burned.",
+                            finished:false, priority: $scope.priorities.low, category: $scope.categories.other,subtasks: ["Buy a sunscreen"]}];
 
         $scope.lists = [{description: "Giuseppe's to do list", tasks: initialTasks},
                         {description: "Other to do list", tasks: []}];
@@ -53,23 +57,53 @@ var toDoList = angular.module('toDoList')
             $scope.priorityStatus[priority] = false;
         };
 
+        function clearInput(){
+            $scope.input.task.description = "";
+            $scope.input.task.detailedDescription = "";
+            $scope.input.task.category = "";
+            $scope.input.task.otherCategory = "";
+            $scope.input.task.priority = "";
+            $scope.input.task.subtask = "";
+        };
+
+        function detectCategoryInput(){
+            var category;
+            if($scope.input.task.otherCategory=="" || !$scope.input.task.otherCategory){
+                category = $scope.input.task.category;
+            }
+            else{
+                category = $scope.input.task.otherCategory;
+                $scope.categories[$scope.input.task.category] = category;
+                $scope.categoryStatus[category] = true;
+            }
+            return category;
+        }
+
         $scope.addNewTask = function(){
             var description = $scope.input.task.description;
+            var detailedDescription = $scope.input.task.detailedDescription;
             var priority = $scope.input.task.priority;
-            var category = $scope.input.task.category;
+            var category = detectCategoryInput();
             if (description && priority && category){
                 if(containsTask(description))
                     $window.alert("A task with this description already exists.");
-                else
-                    $scope.currentList.tasks.push({description: description, finished: false, 
-                        priority: priority, category: category});
-                    $scope.input.task.description = "";
-                    $scope.input.task.category = "";
-                    $scope.input.task.priority = "";
+                else{
+                    $scope.currentList.tasks.push({description: description, detailedDescription: detailedDescription,
+                        finished: false, priority: priority, category: category, subtasks: []});
+                    clearInput();
+                }
             }
             else{
                 $window.alert("Please write a description, select a priority and a category!");
             }
+        };
+
+        $scope.addNewSubtask = function(task){
+            $scope.addingSubtask = false;
+            if($scope.input.task.subtask){
+                task.subtasks.push($scope.input.task.subtask);
+                clearInput();  
+            }  
         };
 
         $scope.addNewList = function(){
@@ -125,6 +159,19 @@ var toDoList = angular.module('toDoList')
 
         $scope.clearLists = function(){
             $scope.lists = [];
+        };
+
+        $scope.sortByDescription = function(){
+            $scope.currentList.tasks.sort(function(task, taskToBeCompared){
+                return task.description.toLowerCase() > taskToBeCompared.description.toLowerCase();
+            });
+        };
+
+        $scope.sortByPriority = function(){
+            $scope.currentList.tasks.sort(function(task, taskToBeCompared){
+                var order = {High: 3, Medium:2, Low:1};
+                return order[task.priority] < order[taskToBeCompared.priority];
+            });
         };
 
         $scope.$watch('[currentList.tasks, categoryStatus, priorityStatus]',function(){
